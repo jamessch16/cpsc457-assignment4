@@ -61,7 +61,7 @@ class DeBruijnCriticalSection extends CriticalSection_Base {
         if (flags.get(turn) == IDLE || turn == thread.ID) {
             turn = (turn - 1) % Server.NUM_THREADS;
         }
-        flags.set(i, IDLE);
+        flags.set(thread.ID, IDLE);
     }
 
 }
