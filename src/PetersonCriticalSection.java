@@ -6,12 +6,22 @@ class PetersonCriticalSection extends CriticalSection_Base {
     private static AtomicIntegerArray flags;
     private static AtomicIntegerArray turn;
 
-    static {
-        // initialize flags and turn arrays
-        flags = new AtomicIntegerArray(Server.NUM_THREADS);
-        turn = new AtomicIntegerArray(Server.NUM_THREADS);
+    private static int numThreads;
 
-        for (int i = 0; i < Server.NUM_THREADS; i++) {
+    public static void newSimulation(int n) {
+        /*
+        Re-initialize the static variables for a new simulation with n threads
+        args: 
+            n - number of threads in the new simulation
+        */
+
+        numThreads = n;
+
+        // initialize flags and turn arrays
+        flags = new AtomicIntegerArray(numThreads);
+        turn = new AtomicIntegerArray(numThreads);
+
+        for (int i = 0; i < n; i++) {
             flags.set(i, -1);
         }   
     }
@@ -21,14 +31,14 @@ class PetersonCriticalSection extends CriticalSection_Base {
         
         boolean waiting;
 
-        for (int k = 0; k < Server.NUM_THREADS - 1; k++) {
+        for (int k = 0; k < numThreads - 1; k++) {
             flags.set(thread.ID, k);
             turn.set(k, thread.ID);
             
             do {
                 waiting = false;
 
-                for (int j = 0; j < Server.NUM_THREADS; j++) {
+                for (int j = 0; j < numThreads; j++) {
                     if (j != thread.ID && flags.get(j) >= k) {
                         waiting = true;
                         break;

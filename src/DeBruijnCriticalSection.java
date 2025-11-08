@@ -10,24 +10,47 @@ class DeBruijnCriticalSection extends CriticalSection_Base {
     private static final int REQUESTING = 1;
     private static final int IN_CS = 2;
 
-    static {
+    private static int numThreads;
+
+    public static void newSimulation(int n) {
+        /*
+        Re-initialize the static variables for a new simulation with n threads
+        args: 
+            n - number of threads in the new simulation
+        */
+
+        numThreads = n;
+
         // initialize flags and turn arrays
-        flags = new AtomicIntegerArray(Server.NUM_THREADS);
+        flags = new AtomicIntegerArray(n);
         turn = 0;
 
-        for (int i = 0; i < Server.NUM_THREADS; i++) {
+        for (int i = 0; i < n; i++) {
             flags.set(i, IDLE);
         } 
     }
 
-    @Override
-    public void EntrySection(Worker thread) {
+    private int modulo (int a, int b) {
         /*
-        Entry section code for DeBruijn's algorithm. Note that this is the same code as Knuth's. Only th exit section is different.
+        Modified modulo function that always returns a positive result
 
         args: 
-            thread - the worker thread trying to enter the critical section
+            a - the dividend
+            b - the divisor
+
+        returns:
+            a mod b
         */
+
+        int result = a % b;
+        if (result < 0) {
+            result += b;
+        }
+        return result;
+    }
+
+    @Override
+    public void EntrySection(Worker thread) {
 
         boolean waiting;
 
@@ -35,9 +58,9 @@ class DeBruijnCriticalSection extends CriticalSection_Base {
             flags.set(thread.ID, REQUESTING);
             int j = turn;
 
-            while (j != thread.ID) {
+            while (j != thread.ID) {        
                 if (flags.get(j) != IDLE)   j = turn;
-                else                        j = (j - 1) % Server.NUM_THREADS;
+                else                        j = modulo(j - 1, numThreads);
             }
 
             flags.set(thread.ID, IN_CS);
@@ -45,7 +68,7 @@ class DeBruijnCriticalSection extends CriticalSection_Base {
             // Check for all j != i, flag[j] != IN_CS
             waiting = false;
 
-            for (int k = 0; k < Server.NUM_THREADS; k++) {
+            for (int k = 0; k < numThreads; k++) {
                 if (k != thread.ID && flags.get(k) == IN_CS) {
                     waiting = true;
                     break;
@@ -59,7 +82,7 @@ class DeBruijnCriticalSection extends CriticalSection_Base {
     @Override
     public void ExitSection(Worker thread) {
         if (flags.get(turn) == IDLE || turn == thread.ID) {
-            turn = (turn - 1) % Server.NUM_THREADS;
+            turn = modulo(turn - 1, numThreads);
         }
         flags.set(thread.ID, IDLE);
     }

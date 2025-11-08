@@ -13,18 +13,18 @@ public class Server {
             n - number of threads to test
         */
 
-        Worker pettersonThreads[] = new Worker[NUM_THREADS];
+        Worker pettersonThreads[] = new Worker[n];
 
-        int timesFinished[] = new int[NUM_THREADS];
-        long threadStartTime[] = new long[NUM_THREADS];  // start time for the first attempt of each thread
-        long threadEndTime[] = new long[NUM_THREADS];    // end time for the last attempt of each thread
+        int timesFinished[] = new int[n];
+        long threadStartTime[] = new long[n];  // start time for the first attempt of each thread
+        long threadEndTime[] = new long[n];    // end time for the last attempt of each thread
 
         boolean waiting;
 
         long average_turnaround_time = 0;
 
         // instantiate peterson's algorithm workers
-        for (int i = 0; i < NUM_THREADS; i++) {
+        for (int i = 0; i < n; i++) {
             pettersonThreads[i] = new Worker(new PetersonCriticalSection(), i);
             pettersonThreads[i].start();
             threadStartTime[i] = System.currentTimeMillis();
@@ -76,18 +76,18 @@ public class Server {
             n - number of threads to test
         */
 
-        Worker knuthThreads[] = new Worker[NUM_THREADS];
+        Worker knuthThreads[] = new Worker[n];
 
-        int timesFinished[] = new int[NUM_THREADS];
-        long threadStartTime[] = new long[NUM_THREADS];  // start time for the first attempt of each thread
-        long threadEndTime[] = new long[NUM_THREADS];    // end time for the last attempt of each thread
+        int timesFinished[] = new int[n];
+        long threadStartTime[] = new long[n];  // start time for the first attempt of each thread
+        long threadEndTime[] = new long[n];    // end time for the last attempt of each thread
 
         boolean waiting;
 
         long average_turnaround_time = 0;
 
         // instantiate knuth's algorithm workers
-        for (int i = 0; i < NUM_THREADS; i++) {
+        for (int i = 0; i < n; i++) {
             knuthThreads[i] = new Worker(new KnuthCriticalSection(), i);
             knuthThreads[i].start();
             threadStartTime[i] = System.currentTimeMillis();
@@ -138,18 +138,18 @@ public class Server {
             n - number of threads to test
         */
 
-        Worker deBruijnThreads[] = new Worker[NUM_THREADS];
+        Worker deBruijnThreads[] = new Worker[n];
 
-        int timesFinished[] = new int[NUM_THREADS];
-        long threadStartTime[] = new long[NUM_THREADS];  // start time for the first attempt of each thread
-        long threadEndTime[] = new long[NUM_THREADS];    // end time for the last attempt of each thread
+        int timesFinished[] = new int[n];
+        long threadStartTime[] = new long[n];  // start time for the first attempt of each thread
+        long threadEndTime[] = new long[n];    // end time for the last attempt of each thread
 
         boolean waiting;
 
         long average_turnaround_time = 0;
 
         // instantiate de bruihn's algorithm workers
-        for (int i = 0; i < NUM_THREADS; i++) {
+        for (int i = 0; i < n; i++) {
             deBruijnThreads[i] = new Worker(new DeBruijnCriticalSection(), i);
             deBruijnThreads[i].start();
             threadStartTime[i] = System.currentTimeMillis();
@@ -193,7 +193,7 @@ public class Server {
         return average_turnaround_time / n;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)  throws InterruptedException {
         //Write your code here to create your threads and test the 3 different algorithms
         //When making worker threads it is recommended for ID to start at 0 and increment by 1 
 
@@ -202,24 +202,27 @@ public class Server {
         System.out.println("CS Solution 1 - Peterson's (time in milli-seconds)");
         System.out.println("Threads\tAVG TAT");
         for (int i = 2; i < NUM_THREADS; i++) {
+            PetersonCriticalSection.newSimulation(i);
             System.out.println(i + "\t" + testPeterson(i));
         }
         System.out.println();
 
 
         // report knuth statistics
-        System.out.println("CS Solution 1 - Knuth's (time in milli-seconds)");
+        System.out.println("CS Solution 2 - Knuth's (time in milli-seconds)");
         System.out.println("Threads\tAVG TAT");
         for (int i = 2; i < NUM_THREADS; i++) {
+            KnuthCriticalSection.newSimulation(i);
             System.out.println(i + "\t" + testKnuth(i));
         }
         System.out.println();
 
 
         // report de bruijn statistics
-        System.out.println("CS Solution 1 - De Bruijn's (time in milli-seconds)");
+        System.out.println("CS Solution 3 - De Bruijn's (time in milli-seconds)");
         System.out.println("Threads\tAVG TAT");
         for (int i = 2; i < NUM_THREADS; i++) {
+            DeBruijnCriticalSection.newSimulation(i);
             System.out.println(i + "\t" + testDeBruijn(i));
         }
         System.out.println();
