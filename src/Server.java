@@ -11,6 +11,16 @@ public class Server {
 
         int id = 0;
 
+        // test peterson's algorithm
+        for (int i = 0; i < NUM_THREADS; i++) {
+            Worker worker = new Worker(new KnuthCriticalSection(), id);
+            worker.start();
+            id++;
+        }
+
+        System.out.println("CS Solution 1 - Peterson's (time in milli-seconds)");
+        System.out.println("Threads\tAVG TAT");
+
     }
 }
 
