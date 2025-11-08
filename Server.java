@@ -201,7 +201,7 @@ public class Server {
         // report peterson statistics
         System.out.println("CS Solution 1 - Peterson's (time in milli-seconds)");
         System.out.println("Threads\tAVG TAT");
-        for (int i = 2; i < NUM_THREADS; i++) {
+        for (int i = 2; i <= NUM_THREADS; i++) {
             PetersonCriticalSection.newSimulation(i);
             System.out.println(i + "\t" + testPeterson(i));
         }
@@ -211,7 +211,7 @@ public class Server {
         // report knuth statistics
         System.out.println("CS Solution 2 - Knuth's (time in milli-seconds)");
         System.out.println("Threads\tAVG TAT");
-        for (int i = 2; i < NUM_THREADS; i++) {
+        for (int i = 2; i <= NUM_THREADS; i++) {
             KnuthCriticalSection.newSimulation(i);
             System.out.println(i + "\t" + testKnuth(i));
         }
@@ -221,7 +221,7 @@ public class Server {
         // report de bruijn statistics
         System.out.println("CS Solution 3 - De Bruijn's (time in milli-seconds)");
         System.out.println("Threads\tAVG TAT");
-        for (int i = 2; i < NUM_THREADS; i++) {
+        for (int i = 2; i <= NUM_THREADS; i++) {
             DeBruijnCriticalSection.newSimulation(i);
             System.out.println(i + "\t" + testDeBruijn(i));
         }
