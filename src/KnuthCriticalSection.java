@@ -19,7 +19,7 @@ class KnuthCriticalSection extends CriticalSection_Base {
     @Override
     public void EntrySection(Worker thread) {
 
-        boolean waiting = false;
+        boolean waiting;
 
         do { 
             flags.set(thread.ID, REQUESTING);
