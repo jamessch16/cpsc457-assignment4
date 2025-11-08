@@ -14,6 +14,10 @@ class KnuthCriticalSection extends CriticalSection_Base {
         // initialize flags and turn arrays
         flags = new AtomicIntegerArray(Server.NUM_THREADS);
         turn = 0;
+
+        for (int i = 0; i < Server.NUM_THREADS; i++) {
+            flags.set(i, IDLE);
+        } 
     }
 
     @Override
